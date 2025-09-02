@@ -2,13 +2,20 @@
 
 import { useState, useMemo } from 'react';
 import { dummyProjects } from '@/data/projects';
-import { Project, ProjectStatus } from '@/types/project';
+import { Project, ProjectStatus, ProjectFormData } from '@/types/project';
+import Modal from '@/components/Modal';
+import ProjectForm from '@/components/ProjectForm';
 
 export default function Dashboard() {
-  const [projects] = useState<Project[]>(dummyProjects);
+  const [projects, setProjects] = useState<Project[]>(dummyProjects);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all');
   const [teamMemberFilter, setTeamMemberFilter] = useState('all');
+  
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get unique team members for filter dropdown
   const uniqueTeamMembers = useMemo(() => {
@@ -34,6 +41,86 @@ export default function Dashboard() {
     });
   }, [projects, searchTerm, statusFilter, teamMemberFilter]);
 
+  // CRUD Operations
+  const handleCreateProject = async (formData: ProjectFormData) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const newProject: Project = {
+        id: (Math.max(...projects.map(p => parseInt(p.id))) + 1).toString(),
+        ...formData,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      setProjects(prev => [...prev, newProject]);
+      setIsModalOpen(false);
+      setEditingProject(null);
+    } catch (error) {
+      console.error('Error creating project:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateProject = async (formData: ProjectFormData) => {
+    if (!editingProject) return;
+    
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const updatedProject: Project = {
+        ...editingProject,
+        ...formData,
+        updatedAt: new Date().toISOString()
+      };
+
+      setProjects(prev => prev.map(p => p.id === editingProject.id ? updatedProject : p));
+      setIsModalOpen(false);
+      setEditingProject(null);
+    } catch (error) {
+      console.error('Error updating project:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteProject = async (projectId: string) => {
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setProjects(prev => prev.filter(p => p.id !== projectId));
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
+  };
+
+  const handleOpenModal = (project?: Project) => {
+    setEditingProject(project || null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingProject(null);
+  };
+
+  const handleFormSubmit = (formData: ProjectFormData) => {
+    if (editingProject) {
+      handleUpdateProject(formData);
+    } else {
+      handleCreateProject(formData);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
@@ -46,7 +133,10 @@ export default function Dashboard() {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+              <button 
+                onClick={() => handleOpenModal()}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
                 Add Project
               </button>
             </div>
@@ -231,10 +321,16 @@ export default function Dashboard() {
                       ${project.budget.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-4">
+                      <button 
+                        onClick={() => handleOpenModal(project)}
+                        className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors"
+                      >
                         Edit
                       </button>
-                      <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                      <button 
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                      >
                         Delete
                       </button>
                     </td>
@@ -246,6 +342,20 @@ export default function Dashboard() {
           )}
         </div>
       </main>
+
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={editingProject ? 'Edit Project' : 'Add New Project'}
+      >
+        <ProjectForm
+          project={editingProject}
+          onSubmit={handleFormSubmit}
+          onCancel={handleCloseModal}
+          isLoading={isLoading}
+        />
+      </Modal>
     </div>
   );
 }
