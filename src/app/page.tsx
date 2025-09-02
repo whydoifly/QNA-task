@@ -420,7 +420,7 @@ export default function Dashboard() {
         title={editingProject ? 'Edit Project' : 'Add New Project'}
       >
         <ProjectForm
-          project={editingProject}
+          project={editingProject || undefined}
           onSubmit={handleFormSubmit}
           onCancel={handleCloseModal}
           isLoading={isLoading}

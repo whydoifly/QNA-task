@@ -20,7 +20,7 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
     description: ''
   });
 
-  const [errors, setErrors] = useState<Partial<ProjectFormData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Populate form when editing
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
   }, [project]);
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<ProjectFormData> = {};
+    const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
       newErrors.name = 'Project name is required';
@@ -73,7 +73,7 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
     }
   };
 
-  const handleInputChange = (field: keyof ProjectFormData, value: string | number) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -81,10 +81,11 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
 
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     }
   };
 
