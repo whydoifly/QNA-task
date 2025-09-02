@@ -5,13 +5,16 @@ A modern, responsive project management dashboard built with Next.js and Tailwin
 ## Features
 
 ### 🎯 Core Functionality
+
 - **Project Management**: Create, read, update, and delete projects
 - **Advanced Filtering**: Search projects by name/description and filter by status or team member
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Dark Mode Support**: Automatic dark/light mode based on system preference
 
 ### 📊 Project Data
+
 Each project includes:
+
 - Project name and description
 - Status (Active, On Hold, Completed)
 - Assigned team member
@@ -20,6 +23,7 @@ Each project includes:
 - Creation and update timestamps
 
 ### 🎨 UI/UX Features
+
 - Clean, modern interface with Tailwind CSS
 - Real-time search and filtering
 - Modal-based forms for adding/editing projects
@@ -39,23 +43,27 @@ Each project includes:
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd QNA-task
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -89,6 +97,7 @@ src/
 ## Features in Detail
 
 ### Search & Filtering
+
 - **Text Search**: Search across project names and descriptions
 - **Status Filter**: Filter by Active, On Hold, or Completed projects
 - **Team Member Filter**: Filter by assigned team member
@@ -96,12 +105,14 @@ src/
 - **Results Counter**: Shows filtered vs total project count
 
 ### Responsive Design
+
 - **Mobile First**: Card-based layout for mobile devices
 - **Desktop Table**: Full-featured table for larger screens
 - **Adaptive Components**: All components scale appropriately
 - **Touch Friendly**: Optimized for touch interactions
 
 ### Form Validation
+
 - **Real-time Validation**: Immediate feedback on form errors
 - **Required Fields**: Name, team member, deadline, and budget
 - **Date Validation**: Prevents past deadline dates
@@ -109,6 +120,7 @@ src/
 - **Loading States**: Visual feedback during form submission
 
 ### Data Management
+
 - **Local State**: Projects stored in React state (simulates API)
 - **CRUD Operations**: Full Create, Read, Update, Delete functionality
 - **Auto-generated IDs**: Automatic ID assignment for new projects
@@ -128,6 +140,7 @@ src/
 - `npm run troubleshoot` - Run diagnostic script for common issues
 
 ### Code Quality
+
 - TypeScript for type safety
 - ESLint for code quality
 - Responsive design best practices
@@ -136,15 +149,18 @@ src/
 ## Support & Troubleshooting
 
 ### Quick Diagnostics
+
 ```bash
 npm run troubleshoot
 ```
 
 ### Documentation
+
 - **[Support Playbook](SUPPORT_PLAYBOOK.md)** - Complete troubleshooting guide for common issues
 - **[Test Documentation](TEST_DOCUMENTATION.md)** - Comprehensive testing information and examples
 
 ### Common Issues
+
 - **No projects showing**: Check browser console, verify data loading
 - **Form not saving**: Validate required fields and date/budget constraints
 - **Mobile layout issues**: Clear cache, try different browser
