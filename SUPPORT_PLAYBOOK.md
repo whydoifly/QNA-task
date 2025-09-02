@@ -97,6 +97,7 @@
    - Try filling one field at a time
    - Check if specific fields trigger validation errors
    - Verify date format (YYYY-MM-DD)
+   - For budget: Enter numbers only (e.g., 50000 or 50000.50)
 
 4. **Check Network Requests**
    - F12 → Network tab
@@ -106,7 +107,7 @@
 **Resolution:**
 - **Validation Errors**: Fix field values according to requirements
 - **Date Issues**: Use future dates only (not past dates)
-- **Budget Issues**: Enter positive numbers only
+- **Budget Issues**: Enter positive numbers only (field accepts text input with automatic formatting)
 - **Browser Issues**: Try different browser or incognito mode
 
 ### Issue #3: "The page looks broken on mobile"
@@ -268,7 +269,29 @@ npm run test:coverage
 - `src/__tests__/components/` - Component unit tests
 - `TEST_DOCUMENTATION.md` - Detailed test documentation
 
-### Q6: What browsers are supported?
+### Q6: Why doesn't the budget field start with 0 anymore?
+
+**A:** We improved the user experience for the budget field:
+
+**Previous Behavior:**
+- Budget field was a number input that defaulted to 0
+- Users had to manually select and delete the 0 to enter a new value
+- Poor user experience for data entry
+
+**New Behavior:**
+- Budget field is now a text input that starts empty
+- Automatically formats input to allow only numbers and decimals
+- Limits decimal places to 2 (e.g., 123.45)
+- Filters out invalid characters automatically
+- Much more user-friendly for entering budget amounts
+
+**Usage:**
+- Simply click in the field and start typing numbers
+- Supports whole numbers (50000) and decimals (50000.50)
+- Invalid characters are automatically removed
+- No need to clear a default 0 value
+
+### Q7: What browsers are supported?
 
 **A:** The dashboard supports all modern browsers:
 

@@ -40,7 +40,7 @@ describe('ProjectForm Component', () => {
     expect(screen.getByLabelText(/Status/)).toHaveValue('active')
     expect(screen.getByLabelText(/Team Member/)).toHaveValue('')
     expect(screen.getByLabelText(/Deadline/)).toHaveValue('')
-    expect(screen.getByLabelText(/Budget/)).toHaveValue(0)
+    expect(screen.getByLabelText(/Budget/)).toHaveValue('')
     expect(screen.getByLabelText(/Description/)).toHaveValue('')
     expect(screen.getByText('Create Project')).toBeInTheDocument()
   })
@@ -93,7 +93,7 @@ describe('ProjectForm Component', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
-  test('should validate zero budget', async () => {
+  test('should validate empty budget', async () => {
     const user = userEvent.setup()
     render(<ProjectForm {...defaultProps} />)
     
@@ -102,11 +102,11 @@ describe('ProjectForm Component', () => {
     futureDate.setFullYear(futureDate.getFullYear() + 1)
     const futureDateString = futureDate.toISOString().split('T')[0]
     
-    // Fill form with zero budget (default value)
+    // Fill form without budget (empty field)
     await user.type(screen.getByLabelText(/Project Name/), 'Test')
     await user.type(screen.getByLabelText(/Team Member/), 'John')
     await user.type(screen.getByLabelText(/Deadline/), futureDateString)
-    // Budget is already 0 by default
+    // Leave budget field empty
     
     await user.click(screen.getByText('Create Project'))
     
@@ -212,15 +212,41 @@ describe('ProjectForm Component', () => {
     expect(statusSelect.value).toBe('completed')
   })
 
-  test('should handle budget input as number', async () => {
+  test('should handle budget input formatting', async () => {
     const user = userEvent.setup()
     render(<ProjectForm {...defaultProps} />)
     
     const budgetInput = screen.getByLabelText(/Budget/)
     
+    // Test typing a valid number
     await user.type(budgetInput, '123.45')
+    expect(budgetInput).toHaveValue('123.45')
     
-    expect(budgetInput).toHaveValue(123.45)
+    // Clear and test invalid characters are filtered out
+    await user.clear(budgetInput)
+    await user.type(budgetInput, 'abc123.45def')
+    expect(budgetInput).toHaveValue('123.45')
+    
+    // Test multiple decimal points are handled (digits after first decimal are joined, then limited to 2 places)
+    await user.clear(budgetInput)
+    await user.type(budgetInput, '123.45.67')
+    expect(budgetInput).toHaveValue('123.45') // 123.4567 gets limited to 123.45
+    
+    // Test decimal places are limited to 2
+    await user.clear(budgetInput)
+    await user.type(budgetInput, '123.456789')
+    expect(budgetInput).toHaveValue('123.45')
+  })
+
+  test('should have improved UX for budget field (no default 0)', () => {
+    render(<ProjectForm {...defaultProps} />)
+    
+    const budgetInput = screen.getByLabelText(/Budget/)
+    
+    // Budget field should start empty, not with 0
+    expect(budgetInput).toHaveValue('')
+    expect(budgetInput).toHaveAttribute('type', 'text')
+    expect(budgetInput).toHaveAttribute('placeholder', 'Enter budget amount (e.g., 50000)')
   })
 
   test('should handle description as optional field', async () => {

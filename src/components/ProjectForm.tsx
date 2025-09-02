@@ -20,6 +20,8 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
     description: ''
   });
 
+  const [budgetDisplayValue, setBudgetDisplayValue] = useState('');
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Populate form when editing
@@ -33,6 +35,9 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
         budget: project.budget,
         description: project.description || ''
       });
+      setBudgetDisplayValue(project.budget.toString());
+    } else {
+      setBudgetDisplayValue('');
     }
   }, [project]);
 
@@ -58,7 +63,7 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
       }
     }
 
-    if (formData.budget <= 0) {
+    if (budgetDisplayValue.trim() === '' || formData.budget <= 0) {
       newErrors.budget = 'Budget must be greater than 0';
     }
 
@@ -73,11 +78,47 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
     }
   };
 
+  // Format budget input to allow only numbers and decimals
+  const formatBudgetInput = (value: string): string => {
+    // Remove any non-digit and non-decimal characters
+    const cleaned = value.replace(/[^\d.]/g, '');
+    
+    // Handle multiple decimal points - keep only the first one
+    const firstDecimalIndex = cleaned.indexOf('.');
+    let result = cleaned;
+    if (firstDecimalIndex !== -1) {
+      const beforeDecimal = cleaned.substring(0, firstDecimalIndex);
+      const afterDecimal = cleaned.substring(firstDecimalIndex + 1).replace(/\./g, '');
+      result = beforeDecimal + '.' + afterDecimal;
+    }
+    
+    // Limit decimal places to 2
+    const parts = result.split('.');
+    if (parts.length === 2 && parts[1].length > 2) {
+      result = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+    
+    return result;
+  };
+
   const handleInputChange = (field: string, value: string | number) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    if (field === 'budget') {
+      const stringValue = value.toString();
+      const formattedValue = formatBudgetInput(stringValue);
+      setBudgetDisplayValue(formattedValue);
+      
+      // Convert to number for form data, defaulting to 0 for empty string
+      const numericValue = formattedValue === '' ? 0 : parseFloat(formattedValue) || 0;
+      setFormData(prev => ({
+        ...prev,
+        [field]: numericValue
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
 
     // Clear error when user starts typing
     if (errors[field]) {
@@ -184,18 +225,16 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
             Budget ($) *
           </label>
           <input
-            type="number"
+            type="text"
             id="budget"
-            value={formData.budget}
-            onChange={(e) => handleInputChange('budget', parseFloat(e.target.value) || 0)}
+            value={budgetDisplayValue}
+            onChange={(e) => handleInputChange('budget', e.target.value)}
             className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-1 ${
               errors.budget
                 ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
                 : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500'
             } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100`}
-            placeholder="Enter budget amount"
-            min="0"
-            step="0.01"
+            placeholder="Enter budget amount (e.g., 50000)"
             disabled={isLoading}
           />
           {errors.budget && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.budget}</p>}

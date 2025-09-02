@@ -26,6 +26,7 @@ Each project includes:
 - Responsive table view (desktop) and card view (mobile)
 - Loading states and form validation
 - Confirmation dialogs for destructive actions
+- Smart budget input field with automatic number formatting (no default 0)
 
 ## Technology Stack
 

@@ -75,7 +75,8 @@ This document provides comprehensive information about the test suite for the Mi
 **Test Cases:**
 - Required field validation (name, team member, deadline, budget)
 - Past deadline validation
-- Zero/negative budget validation
+- Empty/invalid budget validation (improved UX with text input)
+- Budget input formatting (numbers only, decimal handling)
 - Real-time error clearing
 - Field-specific error messages
 
@@ -169,6 +170,18 @@ test('should show validation errors for required fields', async () => {
     expect(screen.getByText('Deadline is required')).toBeInTheDocument()
     expect(screen.getByText('Budget must be greater than 0')).toBeInTheDocument()
   })
+})
+
+// New test for improved budget field UX
+test('should have improved UX for budget field (no default 0)', () => {
+  render(<ProjectForm {...defaultProps} />)
+  
+  const budgetInput = screen.getByLabelText(/Budget/)
+  
+  // Budget field should start empty, not with 0
+  expect(budgetInput).toHaveValue('')
+  expect(budgetInput).toHaveAttribute('type', 'text')
+  expect(budgetInput).toHaveAttribute('placeholder', 'Enter budget amount (e.g., 50000)')
 })
 ```
 
