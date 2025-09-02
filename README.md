@@ -121,12 +121,32 @@ src/
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+- `npm run test` - Run test suite
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run troubleshoot` - Run diagnostic script for common issues
 
 ### Code Quality
 - TypeScript for type safety
 - ESLint for code quality
 - Responsive design best practices
 - Accessible UI components
+
+## Support & Troubleshooting
+
+### Quick Diagnostics
+```bash
+npm run troubleshoot
+```
+
+### Documentation
+- **[Support Playbook](SUPPORT_PLAYBOOK.md)** - Complete troubleshooting guide for common issues
+- **[Test Documentation](TEST_DOCUMENTATION.md)** - Comprehensive testing information and examples
+
+### Common Issues
+- **No projects showing**: Check browser console, verify data loading
+- **Form not saving**: Validate required fields and date/budget constraints
+- **Mobile layout issues**: Clear cache, try different browser
 
 ## Future Enhancements
 
