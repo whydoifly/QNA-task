@@ -253,9 +253,7 @@ export default function Dashboard() {
           {filteredProjects.length === 0 ? (
             <div className="px-6 py-8 text-center">
               <div className="text-gray-500 dark:text-gray-400">
-                <svg className="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.462-.886-6.072-2.34M12 21c-4.411 0-8-3.589-8-8 0-1.092.22-2.134.617-3.084C6.051 8.05 8.839 7 12 7s5.949 1.05 7.383 2.916c.397.95.617 1.992.617 3.084 0 4.411-3.589 8-8 8z" />
-                </svg>
+                
                 <p className="text-lg font-medium">No projects found</p>
                 <p className="text-sm">Try adjusting your search or filter criteria</p>
               </div>
