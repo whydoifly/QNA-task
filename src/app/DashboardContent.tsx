@@ -70,7 +70,7 @@ export default function DashboardContent() {
         updatedAt: now
       };
 
-      setProjects(prev => [...prev, newProject]);
+      setProjects(prev => [newProject, ...prev]);
       setIsModalOpen(false);
       setEditingProject(null);
     } catch (error) {
