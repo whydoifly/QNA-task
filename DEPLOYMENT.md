@@ -150,3 +150,12 @@ If you encounter any issues:
 3. Ensure your application builds successfully locally with `npm run build`
 
 Your Project Dashboard is now ready for deployment to GitHub Pages! 🚀
+
+## Quick Troubleshooting
+
+If you see "Site not found":
+
+1. Check that GitHub Pages is enabled in Settings → Pages
+2. Verify the source is set to "GitHub Actions"
+3. Check the Actions tab for deployment status
+4. Use the correct URL: `https://[username].github.io/QNA-task/`

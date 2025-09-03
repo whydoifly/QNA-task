@@ -48,11 +48,12 @@ export default function Dashboard() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      const now = new Date().toISOString();
       const newProject: Project = {
         id: (Math.max(...projects.map(p => parseInt(p.id))) + 1).toString(),
         ...formData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdAt: now,
+        updatedAt: now
       };
 
       setProjects(prev => [...prev, newProject]);

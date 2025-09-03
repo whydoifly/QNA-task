@@ -21,8 +21,14 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
   });
 
   const [budgetDisplayValue, setBudgetDisplayValue] = useState('');
+  const [isClient, setIsClient] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Set client-side flag to avoid hydration issues
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Populate form when editing
   useEffect(() => {
@@ -54,7 +60,8 @@ export default function ProjectForm({ project, onSubmit, onCancel, isLoading = f
 
     if (!formData.deadline) {
       newErrors.deadline = 'Deadline is required';
-    } else {
+    } else if (isClient) {
+      // Only validate date on client side to avoid hydration issues
       const deadlineDate = new Date(formData.deadline);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
